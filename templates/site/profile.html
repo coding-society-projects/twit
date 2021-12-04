@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}- User Profile{% endblock %}
+
+{% block content %}
+    <h1>{{ user.username }}</h1>
+    <div>
+        <form action="/profile" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="POST">
+        </form>
+    </div>
+    {% for posting in postings %}
+        <div class="row">
+            <b>@{{ posting.author.username }}</b> {{ posting.posted_on }} <br>
+            {{ posting.content }}<br>
+            <a href="/posting/like/{{ posting.id }}">
+                {% if user in posting.likes.all %}<i class="fa-solid fa-heart"></i>{% else %}<i class="fa-regular fa-heart"></i>{% endif %}
+            </a>
+
+            ({{ posting.total_likes }})
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}- Search Result{% endblock %}
+
+{% block content %}
+    <h1>Search for {{ term }}</h1>
+    {% for posting in postings %}
+        <div>
+            <b>@{{ posting.author.username }}</b> {{ posting.posted_on }} <br>
+            {{ posting.content }}
+        </div>
+    {% endfor %}
+{% endblock %}

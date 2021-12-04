@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+<style>
+    th {
+        vertical-align: top;
+    }
+</style>
+
+{% block title %}- Register{% endblock %}
+
+{% block content %}
+<div>
+<h1>Register</h1>
+<form method="post">
+    {% csrf_token %}
+    {% for field in register_form.visible_fields %}
+        <div class="row">
+            <div class="col-sm-2">
+            {{ field.errors }}
+            {{ field.label_tag }}
+            </div>
+            <div class="col-sm-6">
+            {{ field }}<br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">&nbsp;</div>
+            <div class="col-sm-6">{{ field.help_text }}</div>
+        </div>
+    {% endfor %}
+    <input type="submit" />
+</form>
+</div>
+{% endblock %}
