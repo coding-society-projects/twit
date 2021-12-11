@@ -3,6 +3,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Following(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower')
+    follows = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follows')
+
+
+
+
 class Posting(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.CharField(max_length=140)

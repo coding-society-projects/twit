@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from profiles.forms import PostingForm, SearchForm, RegisterForm
-from profiles.models import Posting
+from profiles.models import Posting, Following
 
 
 def home(request):
@@ -25,7 +25,12 @@ def profile(request):
     else:
         form = PostingForm()
     postings = Posting.objects.order_by('-posted_on')
-    context = {'postings': postings, 'form': form, 'search_form': search_form}
+    current_uid = request.user.id
+    follows = Following.objects.filter(user_id=current_uid)
+    followed_users = []
+    for record in follows:
+        followed_users.append(record.follows)
+    context = {'postings': postings, 'form': form, 'search_form': search_form, 'follows': followed_users}
     return render(request, 'site/profile.html', context)
 
 
@@ -62,3 +67,18 @@ def like_post(request, pid):
 
     return redirect('/profile')
 
+
+def follow(request, uid):
+    current_uid = request.user.id
+    following = Following()
+    following.user_id = current_uid
+    following.follows_id = uid
+    following.save()
+    return redirect('/profile')
+
+
+def following(request):
+    current_uid = request.user.id
+    follows = Following.objects.filter(user_id=current_uid)
+    context = {'follows': follows}
+    return render(request, 'site/following.html', context)

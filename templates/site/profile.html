@@ -5,6 +5,10 @@
 {% block content %}
     <h1>{{ user.username }}</h1>
     <div>
+    <a href="/following">following</a>
+    <a href="/followers">followers</a>
+    </div>
+    <div>
         <form action="/profile" method="post">
             {% csrf_token %}
             {{ form }}
@@ -13,13 +17,21 @@
     </div>
     {% for posting in postings %}
         <div class="row">
-            <b>@{{ posting.author.username }}</b> {{ posting.posted_on }} <br>
+            <div class="col-sm-8">
+            <b>@{{ posting.author.username }}</b>
+                {% if posting.author in follows %}
+                    {% if user != posting.author %}<a href="/unfollow/{{ posting.author_id }}">unfollow</a>{% endif %}
+                {% else %}
+                    {% if user != posting.author %}<a href="/follow/{{ posting.author_id }}">follow</a>{% endif %}
+                {% endif %}
+                {{ posting.posted_on }} <br>
             {{ posting.content }}<br>
             <a href="/posting/like/{{ posting.id }}">
                 {% if user in posting.likes.all %}<i class="fa-solid fa-heart"></i>{% else %}<i class="fa-regular fa-heart"></i>{% endif %}
             </a>
 
             ({{ posting.total_likes }})
+            </div>
         </div>
     {% endfor %}
 {% endblock %}
